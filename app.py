@@ -23,19 +23,18 @@ def fetch_google_developer_knowledge(topic: str) -> str:
     # This simulates pulling live data from Google's documentation server
     topic_lower = topic.lower()
     if "gemini" in topic_lower or "genai" in topic_lower:
-        return """
-        [MCP Server Result - Source: ai.google.dev]
-        To initialize the new Google GenAI SDK in Python:
+        return """[MCP Server Result - Source: ai.google.dev]
+To initialize the new Google GenAI SDK in Python:
 ```python
-        from google import genai
-        client = genai.Client()
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents='Hello World'
-        )
-        print(response.text)
-        ```
-        """
+from google import genai
+
+client = genai.Client()
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents='Hello World'
+)
+print(response.text)
+```"""
     elif "streamlit" in topic_lower:
         return "[MCP Server Result] Streamlit apps are run locally via command: `streamlit run app.py`"
     else:
@@ -67,23 +66,31 @@ if st.button("Query Agent via MCP"):
             
             # Check if Gemini decided it needed to read the documentation tool
             if response.function_calls:
-                st.subheader("💭 Agent Thought Process (A2UI)")
-                for call in response.function_calls:
-                    st.info(f"🔍 AI decided it needs official data. Executing tool: `{call.name}`")
+                # Beautiful expanding status block for the internal thought process
+                with st.status("🧠 Agent Thought Process & Routing...", expanded=True) as status:
+                    for call in response.function_calls:
+                        st.write("🔄 **Analyzing Intent:** User requested technical implementation.")
+                        st.write("🔌 **Connecting to MCP Server:** `Google Developer Knowledge MCP`")
+                        st.write(f"⚙️ **Executing Tool:** `{call.name}` with parameters: `{call.args}`")
+                        
+                        # Run the tool
+                        mcp_result = tools_map[call.name](**call.args)
+                        st.write("📥 **Data Retrieval:** Success. Official documentation chunk pulled.")
                     
-                    # Run the tool
-                    mcp_result = tools_map[call.name](**call.args)
-                    
-                    st.markdown("### 📥 Live Documentation Retrieved:")
+                    status.update(label="✅ Context retrieved via MCP Protocol!", state="complete", expanded=False)
+                
+                # Send the data back to Gemini for a final polished summary
+                final_response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=f"The user asked: {user_query}. The documentation server returned this: {mcp_result}. Summarize this perfectly for them."
+                )
+                
+                st.markdown("### 🎯 Final Answer:")
+                st.write(final_response.text)
+                
+                # Show the raw developer data inside a clean expander at the bottom
+                with st.expander("📄 View Raw Canonical MCP Data"):
                     st.code(mcp_result, language="python")
-                    
-                    # Send the data back to Gemini for a final summary
-                    final_response = client.models.generate_content(
-                        model='gemini-2.5-flash',
-                        contents=f"The user asked: {user_query}. The documentation server returned this: {mcp_result}. Summarize this perfectly for them."
-                    )
-                    st.markdown("### 🎯 Final Answer:")
-                    st.write(final_response.text)
             else:
                 # If it didn't need tools, just print normal answer
                 st.subheader("🎯 Answer:")
