@@ -11,87 +11,76 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-st.title("🎒 Day 2: MCP Developer Knowledge Agent")
-st.write("Connected to: **Google Developer Knowledge MCP Server**")
+st.title("🎒 Day 3: Dynamic Agent Skills Framework")
+st.write("Simulating **Antigravity ADK & Skills Directory** with Progressive Disclosure.")
 
-# 2. Define the MCP Tool function
-def fetch_google_developer_knowledge(topic: str) -> str:
-    """
-    Connects to the Google Developer Knowledge MCP server to retrieve 
-    canonical, machine-readable documentation and code samples.
-    """
-    # This simulates pulling live data from Google's documentation server
-    topic_lower = topic.lower()
-    if "gemini" in topic_lower or "genai" in topic_lower:
-        return """[MCP Server Result - Source: ai.google.dev]
-To initialize the new Google GenAI SDK in Python:
-```python
-from google import genai
+# 2. Simulate our Local Skills Registry (The SKILL.md configurations)
+SKILLS_REGISTRY = {
+    "Code_Linter_Skill": {
+        "description": "Lints, optimizes, and debugs source code syntax using natural language standards.",
+        "skill_md": """
+        # SKILL.md: Code Linter Specialist
+        - ROLE: Senior Python Code Reviewer
+        - INSTRUCTIONS: Analyze the provided code block for missing syntax, security flaws, or unhandled exceptions.
+        - OUTPUT FORMAT: Provide a 'Bugs Found' section followed by an 'Optimized Solution' block.
+        """
+    },
+    "Agent_Tester_Skill": {
+        "description": "Generates automated test cases and edge-case testing scenarios for AI agents.",
+        "skill_md": """
+        # SKILL.md: Automated Agent Tester
+        - ROLE: QA Automation Engineer
+        - INSTRUCTIONS: Design 3 critical test scenarios (including a bad/empty input scenario) for the user's logic.
+        - OUTPUT FORMAT: Bulleted test cases with expected results.
+        """
+    }
+}
 
-client = genai.Client()
-response = client.models.generate_content(
-    model='gemini-2.5-flash',
-    contents='Hello World'
-)
-print(response.text)
-```"""
-    elif "streamlit" in topic_lower:
-        return "[MCP Server Result] Streamlit apps are run locally via command: `streamlit run app.py`"
-    else:
-        return f"[MCP Server Result] Successfully queried Google Knowledge MCP for: '{topic}'. No critical issues found."
-
-# Create a tool dictionary map
-tools_map = {"fetch_google_developer_knowledge": fetch_google_developer_knowledge}
-
-# 3. User Interface
-user_query = st.text_input(
-    "Ask a technical question about Google tools:", 
-    placeholder="e.g., How do I call gemini-2.5-flash using the new SDK?"
+# 3. User UI - Selecting/Discovering a Skill
+st.subheader("🛠️ Step 1: Load a Specialist Skill from ADK Directory")
+selected_skill = st.selectbox(
+    "Choose an available Agent Skill to load into memory:",
+    options=list(SKILLS_REGISTRY.keys()),
+    format_func=lambda x: f"{x} — {SKILLS_REGISTRY[x]['description']}"
 )
 
-if st.button("Query Agent via MCP"):
-    if not user_query.strip():
-        st.warning("Please enter a question first!")
+# Display the loaded SKILL.md contents dynamically (Progressive Disclosure)
+with st.expander(f"📄 View Loaded `{selected_skill}/SKILL.md` Configurations", expanded=False):
+    st.code(SKILLS_REGISTRY[selected_skill]["skill_md"], language="markdown")
+
+# 4. User Prompt Input
+st.subheader("⚡ Step 2: Execute Task with Loaded Skill")
+user_task = st.text_area(
+    "Enter the code or agent prompt you want this specialist to process:",
+    placeholder="Paste code to lint or describe a feature to test here..."
+)
+
+if st.button("Execute Skill via Agents CLI"):
+    if not user_task.strip():
+        st.warning("Please provide task details first!")
     else:
-        with st.spinner("Routing request through Antigravity CLI context..."):
+        # Load rules only at execution time to avoid "context rot"
+        active_skill_rules = SKILLS_REGISTRY[selected_skill]["skill_md"]
+        
+        with st.status(f"⚙️ Antigravity CLI: Initializing `{selected_skill}`...", expanded=True) as status:
+            st.write("📦 Reading local skill workspace registry...")
+            st.write("🔍 Parsing `SKILL.md` rules into execution context...")
+            st.write("🚀 Sending temporary lightweight frame to Gemini...")
             
-            # Ask Gemini while giving it access to our MCP tool
+            # Combine the lightweight skill guide with the user's task
+            orchestration_prompt = f"""
+            {active_skill_rules}
+            
+            USER TASK TO EXECUTE:
+            \"\"\"{user_task}\"\"\"
+            """
+            
             response = client.models.generate_content(
                 model='gemini-2.5-flash',
-                contents=user_query,
-                config=types.GenerateContentConfig(
-                    tools=[fetch_google_developer_knowledge]
-                )
+                contents=orchestration_prompt
             )
             
-            # Check if Gemini decided it needed to read the documentation tool
-            if response.function_calls:
-                # Beautiful expanding status block for the internal thought process
-                with st.status("🧠 Agent Thought Process & Routing...", expanded=True) as status:
-                    for call in response.function_calls:
-                        st.write("🔄 **Analyzing Intent:** User requested technical implementation.")
-                        st.write("🔌 **Connecting to MCP Server:** `Google Developer Knowledge MCP`")
-                        st.write(f"⚙️ **Executing Tool:** `{call.name}` with parameters: `{call.args}`")
-                        
-                        # Run the tool
-                        mcp_result = tools_map[call.name](**call.args)
-                        st.write("📥 **Data Retrieval:** Success. Official documentation chunk pulled.")
-                    
-                    status.update(label="✅ Context retrieved via MCP Protocol!", state="complete", expanded=False)
-                
-                # Send the data back to Gemini for a final polished summary
-                final_response = client.models.generate_content(
-                    model='gemini-2.5-flash',
-                    contents=f"The user asked: {user_query}. The documentation server returned this: {mcp_result}. Summarize this perfectly for them."
-                )
-                
-                st.markdown("### 🎯 Final Answer:")
-                st.write(final_response.text)
-                
-                # Show the raw developer data inside a clean expander at the bottom
-                with st.expander("📄 View Raw Canonical MCP Data"):
-                    st.code(mcp_result, language="python")
-            else:
-                # If it didn't need tools, just print normal answer
-                st.subheader("🎯 Answer:")
-                st.write(response.text)
+            status.update(label=f"✅ `{selected_skill}` Execution Completed!", state="complete", expanded=False)
+            
+        st.markdown(f"### 🎯 `{selected_skill}` Output:")
+        st.info(response.text)
