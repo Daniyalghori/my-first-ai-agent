@@ -25,7 +25,8 @@ with st.form("expense_form"):
     amount = st.number_input("Amount ($):", min_value=1.0, step=10.0, value=150.0)
     justification = st.text_area("Business Justification / Prompt:", placeholder="Provide details for the expense...")
     
-    submit_button = st.form_submit_with_name("Analyze Claim")
+    # FIX: Changed from st.form_submit_with_name to the correct st.form_submit_button
+    submit_button = st.form_submit_button("Analyze Claim")
 
 # 4. Processing the Claim
 if submit_button:
