@@ -11,76 +11,75 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-st.title("🎒 Day 3: Dynamic Agent Skills Framework")
-st.write("Simulating **Antigravity ADK & Skills Directory** with Progressive Disclosure.")
+st.title("🎒 Day 4: Secure Expense-Approval Agent")
+st.write("Simulating **Human-in-the-Loop (HITL)**, Safety Guards, and Security Trajectories.")
 
-# 2. Simulate our Local Skills Registry (The SKILL.md configurations)
-SKILLS_REGISTRY = {
-    "Code_Linter_Skill": {
-        "description": "Lints, optimizes, and debugs source code syntax using natural language standards.",
-        "skill_md": """
-        # SKILL.md: Code Linter Specialist
-        - ROLE: Senior Python Code Reviewer
-        - INSTRUCTIONS: Analyze the provided code block for missing syntax, security flaws, or unhandled exceptions.
-        - OUTPUT FORMAT: Provide a 'Bugs Found' section followed by an 'Optimized Solution' block.
-        """
-    },
-    "Agent_Tester_Skill": {
-        "description": "Generates automated test cases and edge-case testing scenarios for AI agents.",
-        "skill_md": """
-        # SKILL.md: Automated Agent Tester
-        - ROLE: QA Automation Engineer
-        - INSTRUCTIONS: Design 3 critical test scenarios (including a bad/empty input scenario) for the user's logic.
-        - OUTPUT FORMAT: Bulleted test cases with expected results.
-        """
-    }
-}
+# 2. Sidebar Security Guard Panel
+st.sidebar.subheader("🛡️ 7-Pillar Security Triad")
+st.sidebar.info("🟢 Ephemeral Sandboxing: **Active**\n\n🔵 Automated Threat Scan: **Enabled**\n\n🔴 Slopsquatting Protection: **Secure**")
 
-# 3. User UI - Selecting/Discovering a Skill
-st.subheader("🛠️ Step 1: Load a Specialist Skill from ADK Directory")
-selected_skill = st.selectbox(
-    "Choose an available Agent Skill to load into memory:",
-    options=list(SKILLS_REGISTRY.keys()),
-    format_func=lambda x: f"{x} — {SKILLS_REGISTRY[x]['description']}"
-)
+# 3. Expense Input Form
+with st.form("expense_form"):
+    st.subheader("💵 Submit Corporate Expense Claim")
+    item_name = st.text_input("Item / Service Name:", placeholder="e.g., Cloud Server Subscription")
+    amount = st.number_input("Amount ($):", min_value=1.0, step=10.0, value=150.0)
+    justification = st.text_area("Business Justification / Prompt:", placeholder="Provide details for the expense...")
+    
+    submit_button = st.form_submit_with_name("Analyze Claim")
 
-# Display the loaded SKILL.md contents dynamically (Progressive Disclosure)
-with st.expander(f"📄 View Loaded `{selected_skill}/SKILL.md` Configurations", expanded=False):
-    st.code(SKILLS_REGISTRY[selected_skill]["skill_md"], language="markdown")
-
-# 4. User Prompt Input
-st.subheader("⚡ Step 2: Execute Task with Loaded Skill")
-user_task = st.text_area(
-    "Enter the code or agent prompt you want this specialist to process:",
-    placeholder="Paste code to lint or describe a feature to test here..."
-)
-
-if st.button("Execute Skill via Agents CLI"):
-    if not user_task.strip():
-        st.warning("Please provide task details first!")
+# 4. Processing the Claim
+if submit_button:
+    if not item_name.strip() or not justification.strip():
+        st.warning("Please fill out all fields before submitting.")
     else:
-        # Load rules only at execution time to avoid "context rot"
-        active_skill_rules = SKILLS_REGISTRY[selected_skill]["skill_md"]
-        
-        with st.status(f"⚙️ Antigravity CLI: Initializing `{selected_skill}`...", expanded=True) as status:
-            st.write("📦 Reading local skill workspace registry...")
-            st.write("🔍 Parsing `SKILL.md` rules into execution context...")
-            st.write("🚀 Sending temporary lightweight frame to Gemini...")
+        # Step A: Run Automated Threat Scan / Safety Guard
+        with st.status("🔍 Security Engine Running Scans...", expanded=True) as status:
+            st.write("🛡️ Scanning inputs for Prompt Injections...")
             
-            # Combine the lightweight skill guide with the user's task
-            orchestration_prompt = f"""
-            {active_skill_rules}
+            # Simple simulation of input sanitization/guardrails
+            if "ignore previous instructions" in justification.lower() or "bypass" in justification.lower():
+                status.update(label="🚨 Malicious Prompt Injection Detected!", state="error", expanded=True)
+                st.error("Security Alert: System blocked potential exploit attempt.")
+                st.stop()
+                
+            st.write("✅ Security Guard Scan Passed.")
+            st.write("📊 Evaluating expense tier against automated policies...")
             
-            USER TASK TO EXECUTE:
-            \"\"\"{user_task}\"\"\"
-            """
-            
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=orchestration_prompt
-            )
-            
-            status.update(label=f"✅ `{selected_skill}` Execution Completed!", state="complete", expanded=False)
-            
-        st.markdown(f"### 🎯 `{selected_skill}` Output:")
-        st.info(response.text)
+            # Step B: Determine policy routing based on amount
+            if amount >= 500.0:
+                # Requires Human-in-the-Loop Triage
+                status.update(label="⚠️ Triage Triggered: Human-in-the-Loop Intervention Required", state="error", expanded=True)
+                st.session_state["hitl_triggered"] = True
+                st.session_state["pending_item"] = item_name
+                st.session_state["pending_amount"] = amount
+                st.session_state["pending_justification"] = justification
+            else:
+                # Auto-approve via Gemini Evaluation Trajectory
+                status.update(label="✅ Policy Cleared: Passing to Automated Agent Evaluation", state="complete", expanded=False)
+                st.session_state["hitl_triggered"] = False
+                
+                # Let Gemini evaluate the business validity
+                eval_prompt = f"Review this expense claim for business validity. Item: {item_name}, Amount: ${amount}. Justification: {justification}. Give a 2-sentence corporate assessment decision."
+                response = client.models.generate_content(model='gemini-2.5-flash', contents=eval_prompt)
+                
+                st.success(f"🤖 **Automated Agent Decision (Auto-Approved Under $500):**")
+                st.write(response.text)
+
+# 5. Render Human-in-the-Loop Interface if triggered
+if st.session_state.get("hitl_triggered", False):
+    st.markdown("---")
+    st.warning(f"🚨 **HUMAN INTERVENTION REQUIRED**\n\nThe claim for **{st.session_state['pending_item']}** (${st.session_state['pending_amount']}) exceeds the $500 automated security threshold.")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("👍 Grant Human Approval", use_container_width=True):
+            with st.spinner("Processing manual override trajectory..."):
+                eval_prompt = f"The human supervisor has APPROVED this high-value expense. Generate a formal approval receipt response for: {st.session_state['pending_item']} costing ${st.session_state['pending_amount']}."
+                response = client.models.generate_content(model='gemini-2.5-flash', contents=eval_prompt)
+                st.success("💼 Expense Logged and Disbursed!")
+                st.write(response.text)
+                st.session_state["hitl_triggered"] = False
+    with col2:
+        if st.button("👎 Reject Claim", use_container_width=True):
+            st.error(f"❌ Claim for {st.session_state['pending_item']} has been forcefully rejected by the Human Auditor.")
+            st.session_state["hitl_triggered"] = False
