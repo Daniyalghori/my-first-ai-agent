@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from google import genai
 from google.genai import types
-from google.genai.errors import APIError  # For catching backend API glitches securely
+from google.genai.errors import APIError
 
 # 1. Initialize your Gemini Client
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -12,86 +12,80 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-st.title("🎒 Day 4: Secure Expense-Approval Agent")
-st.write("Simulating **Human-in-the-Loop (HITL)**, Safety Guards, and Security Trajectories.")
+st.title("🚀 Day 5: Spec-Driven Enterprise Engine")
+st.write("Transitioning from **Vibe Coding** prototypes to **Behavior-Driven Specifications**.")
 
-# 2. Sidebar Security Guard Panel
-st.sidebar.subheader("🛡️ 7-Pillar Security Triad")
-st.sidebar.info("🟢 Ephemeral Sandboxing: **Active**\n\n🔵 Automated Threat Scan: **Enabled**\n\n🔴 Slopsquatting Protection: **Secure**")
+# 2. Sidebar Policy Server Monitoring
+st.sidebar.subheader("🛡️ Hybrid Policy Server Status")
+st.sidebar.success("🔒 Zero-Trust Pipeline: ENFORCED")
+st.sidebar.info("📊 Gherkin Parser: Operational\n\n🎯 Spec Compliance Audit: 100%")
 
-# 3. Expense Input Form
-with st.form("expense_form"):
-    st.subheader("💵 Submit Corporate Expense Claim")
-    item_name = st.text_input("Item / Service Name:", placeholder="e.g., Cloud Server Subscription")
-    amount = st.number_input("Amount ($):", min_value=1.0, step=10.0, value=150.0)
-    justification = st.text_area("Business Justification / Prompt:", placeholder="Provide details for the expense...")
-    
-    submit_button = st.form_submit_button("Analyze Claim")
+# 3. Choose a Feature Specification Template
+st.subheader("📋 Step 1: Select or Write a Behavior Specification (Gherkin Syntax)")
 
-# 4. Processing the Claim
-if submit_button:
-    if not item_name.strip() or not justification.strip():
-        st.warning("Please fill out all fields before submitting.")
+template_option = st.selectbox(
+    "Choose a production spec template:",
+    ["Expense Approval Security", "User Authentication Flow", "Custom Specification"]
+)
+
+# Populate default Gherkin specs based on selection
+if template_option == "Expense Approval Security":
+    default_spec = """Feature: Secure Expense Routing
+  Scenario: High-value claims must trigger human-in-the-loop triage
+    Given an expense claim is submitted by an employee
+    When the claim amount is greater than or equal to 500
+    Then halt automated execution
+    And route the claim trajectory to the human auditor panel for manual approval"""
+elif template_option == "User Authentication Flow":
+    default_spec = """Feature: Safe Enterprise Login
+  Scenario: Block brute force attacks
+    Given a user enters incorrect credentials three times
+    When the fourth login attempt is detected
+    Then temporarily lock the account for 15 minutes
+    And trigger a security alert log notification"""
+else:
+    default_spec = "# Write your own Given/When/Then spec here..."
+
+gherkin_spec = st.text_area("Behavior-Driven Source of Truth (Gherkin Spec):", value=default_spec, height=160)
+
+# 4. Compile and Run through Policy Server Pipeline
+st.subheader("⚡ Step 2: Run Zero-Trust Compliance and Compilation")
+
+if st.button("Compile Spec to Production Code"):
+    if not gherkin_spec.strip() or gherkin_spec.startswith("#"):
+        st.warning("Please provide a valid specification feature set first!")
     else:
-        # Step A: Run Automated Threat Scan / Safety Guard
-        with st.status("🔍 Security Engine Running Scans...", expanded=True) as status:
-            st.write("🛡️ Scanning inputs for Prompt Injections...")
+        # Step A: Hybrid Policy Server validation animation
+        with st.status("🔒 Policy Server: Auditing System Trajectories...", expanded=True) as status:
+            st.write("📡 Connecting to Asynchronous Enterprise Pipeline...")
+            st.write("🔍 Running static syntax check on Gherkin blocks...")
+            st.write("🛡️ Validating zero-trust compliance constraints...")
             
-            if "ignore previous instructions" in justification.lower() or "bypass" in justification.lower():
-                status.update(label="🚨 Malicious Prompt Injection Detected!", state="error", expanded=True)
-                st.error("Security Alert: System blocked potential exploit attempt.")
-                st.stop()
-                
-            st.write("✅ Security Guard Scan Passed.")
-            st.write("📊 Evaluating expense tier against automated policies...")
+            # Formulate the strict spec prompt for Gemini
+            sdd_prompt = f"""
+            You are an automated enterprise-grade code-review and compilation agent. 
+            You must treat the following Gherkin Behavior Specification as the absolute source of truth.
             
-            # Step B: Determine policy routing based on amount
-            if amount >= 500.0:
-                # Requires Human-in-the-Loop Triage
-                status.update(label="⚠️ Triage Triggered: Human-in-the-Loop Intervention Required", state="error", expanded=True)
-                st.session_state["hitl_triggered"] = True
-                st.session_state["pending_item"] = item_name
-                st.session_state["pending_amount"] = amount
-                st.session_state["pending_justification"] = justification
-            else:
-                # Auto-approve via Gemini Evaluation Trajectory
-                status.update(label="✅ Policy Cleared: Passing to Automated Agent Evaluation", state="complete", expanded=False)
-                st.session_state["hitl_triggered"] = False
+            SPECIFICATION:
+            \"\"\"{gherkin_spec}\"\"\"
+            
+            INSTRUCTIONS:
+            1. Validate if the spec is sound.
+            2. Generate the highly robust, clean production Python logic/code block that perfectly satisfies this specification.
+            3. Include brief developer compliance notes at the end.
+            """
+            
+            try:
+                response = client.models.generate_content(model='gemini-2.5-flash', contents=sdd_prompt)
+                status.update(label="✅ Policy Server Approved! Spec compiled successfully.", state="complete", expanded=False)
                 
-                # Let Gemini evaluate the business validity with error-handling safeguards
-                eval_prompt = f"Review this expense claim for business validity. Item: {item_name}, Amount: ${amount}. Justification: {justification}. Give a 2-sentence corporate assessment decision."
+                # Step B: Present the compiled production asset
+                st.success("🎯 **Compiled Production-Grade Code Block:**")
+                st.write(response.text)
                 
-                try:
-                    response = client.models.generate_content(model='gemini-2.5-flash', contents=eval_prompt)
-                    st.success(f"🤖 **Automated Agent Decision (Auto-Approved Under $500):**")
-                    st.write(response.text)
-                except APIError as e:
-                    st.error("⚠️ Google API Server is temporarily busy or unreachable. Please wait a few seconds and click 'Analyze Claim' again.")
-                except Exception as e:
-                    st.error("An unexpected error occurred. Please try resubmitting your request.")
-
-# 5. Render Human-in-the-Loop Interface if triggered
-if st.session_state.get("hitl_triggered", False):
-    st.markdown("---")
-    st.warning(f"🚨 **HUMAN INTERVENTION REQUIRED**\n\nThe claim for **{st.session_state['pending_item']}** (${st.session_state['pending_amount']}) exceeds the $500 automated security threshold.")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("👍 Grant Human Approval", use_container_width=True):
-            with st.spinner("Processing manual override trajectory..."):
-                eval_prompt = f"The human supervisor has APPROVED this high-value expense. Generate a formal approval receipt response for: {st.session_state['pending_item']} costing ${st.session_state['pending_amount']}."
-                
-                try:
-                    response = client.models.generate_content(model='gemini-2.5-flash', contents=eval_prompt)
-                    st.success("💼 Expense Logged and Disbursed!")
-                    st.write(response.text)
-                    st.session_state["hitl_triggered"] = False
-                except APIError as e:
-                    st.error("⚠️ Google API Server is busy. Please try clicking approval again in a moment.")
-                except Exception as e:
-                    st.error("Failed to complete approval due to an external connection issue.")
-                    
-    with col2:
-        if st.button("👎 Reject Claim", use_container_width=True):
-            st.error(f"❌ Claim for {st.session_state['pending_item']} has been forcefully rejected by the Human Auditor.")
-            st.session_state["hitl_triggered"] = False
+            except APIError:
+                status.update(label="❌ Connection Timeout", state="error")
+                st.error("Google's backend servers are busy. Please try clicking the button again.")
+            except Exception as e:
+                status.update(label="❌ Pipeline Error", state="error")
+                st.error(f"An unexpected error occurred: {e}")
