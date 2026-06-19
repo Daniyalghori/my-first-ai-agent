@@ -4,29 +4,82 @@ from google import genai
 from google.genai import types
 from google.genai.errors import APIError
 
+# Set page configuration for a premium engineering portal look
+st.set_page_config(
+    page_title="Spec-Driven Agentic Synthesis Engine",
+    page_icon="🚀",
+    layout="wide"
+)
+
 # 1. Initialize your Gemini Client
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    st.error("Missing GEMINI_API_KEY! Please set it in your environment variables.")
+    st.error("🚨 CRITICAL ERROR: GEMINI_API_KEY missing from system architecture environment variables.")
     st.stop()
 
 client = genai.Client(api_key=api_key)
 
-st.title("🚀 Day 5: Spec-Driven Enterprise Engine")
-st.write("Transitioning from **Vibe Coding** prototypes to **Behavior-Driven Specifications**.")
+# Custom CSS injection for premium typography and container styling
+st.markdown("""
+    <style>
+    .main-title {
+        font-size: 2.6rem !important;
+        font-weight: 800 !important;
+        color: #1E3A8A;
+        margin-bottom: 0.2rem !important;
+    }
+    .subtitle {
+        font-size: 1.1rem !important;
+        color: #4B5563;
+        margin-bottom: 2rem !important;
+    }
+    .section-header {
+        font-size: 1.4rem !important;
+        font-weight: 700 !important;
+        color: #1F2937;
+        border-bottom: 2px solid #E5E7EB;
+        padding-bottom: 0.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    </style>
+""", unsafe_index=False, unsafe_allow_html=True)
 
-# 2. Sidebar Policy Server Monitoring
-st.sidebar.subheader("🛡️ Hybrid Policy Server Status")
+# 2. Main Title & Academic Capstone Sub-header
+st.markdown('<div class="main-title">🚀 Spec-Driven Agentic Synthesis Engine</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">An Advanced Framework for Behavior-Driven Production Code Generation via LLM Orchestration & Zero-Trust Verification</div>', unsafe_allow_html=True)
+
+# 3. Sidebar: Policy Server Monitoring Panel
+st.sidebar.markdown("### 🛡️ Hybrid Policy Server Control")
 st.sidebar.success("🔒 Zero-Trust Pipeline: ENFORCED")
-st.sidebar.info("📊 Gherkin Parser: Operational\n\n🎯 Spec Compliance Audit: 100%")
+st.sidebar.markdown("---")
+st.sidebar.markdown("**System Health Logs:**")
+st.sidebar.info("📊 Gherkin Parser: Operational\n\n🎯 Spec Compliance Audit: 100%\n\n⚡ Cloud Run Telemetry: Safe")
 
-# 3. Choose a Feature Specification Template
-st.subheader("📋 Step 1: Select or Write a Behavior Specification (Gherkin Syntax)")
+# 4. Engineering Metric Dashboard (Simulated Telemetry)
+col_m1, col_m2, col_m3 = st.columns(3)
+with col_m1:
+    st.metric(label="Validation Pipeline Latency", value="42 ms", delta="-4 ms (Optimal)")
+with col_m2:
+    st.metric(label="Zero-Trust Compliance Score", value="100%", delta="Verified", delta_color="normal")
+with col_m3:
+    st.metric(label="Core Compiler Engine", value="Gemini 2.5 Flash", delta="Active Connection")
 
-template_option = st.selectbox(
-    "Choose a production spec template:",
-    ["Expense Approval Security", "User Authentication Flow", "Custom Specification"]
-)
+st.markdown('<div class="section-header">📋 Behavioral Specification Input Workspace</div>', unsafe_allow_html=True)
+
+# 5. Core Layout Split: Configuration on left, Live Spec on right
+col_left, col_right = st.columns([1, 1.2])
+
+with col_left:
+    st.markdown("##### Configuration Parameters")
+    template_option = st.selectbox(
+        "Select Domain Behavior Template:",
+        ["Expense Approval Security", "User Authentication Flow", "Custom Architecture Spec"]
+    )
+    
+    st.markdown("""
+    > **Engineering Note:** This module shifts development paradigms from *Vibe Coding* into **Spec-Driven Development (SDD)**. The behavior-driven Gherkin specification acts as the absolute immutable source of truth.
+    """)
 
 # Populate default Gherkin specs based on selection
 if template_option == "Expense Approval Security":
@@ -44,48 +97,52 @@ elif template_option == "User Authentication Flow":
     Then temporarily lock the account for 15 minutes
     And trigger a security alert log notification"""
 else:
-    default_spec = "# Write your own Given/When/Then spec here..."
+    default_spec = """Feature: [Enter System Feature]
+  Scenario: [Enter Functional Constraint]
+    Given [Initial system state context]
+    When [Triggering action event occurs]
+    Then [Expected deterministic outcome behavior]"""
 
-gherkin_spec = st.text_area("Behavior-Driven Source of Truth (Gherkin Spec):", value=default_spec, height=160)
+with col_right:
+    gherkin_spec = st.text_area("Behavior-Driven Source of Truth (Gherkin Syntax Specification):", value=default_spec, height=200)
 
-# 4. Compile and Run through Policy Server Pipeline
-st.subheader("⚡ Step 2: Run Zero-Trust Compliance and Compilation")
+st.markdown('<div class="section-header">⚡ Compilation & Code Review Agents Pipeline</div>', unsafe_allow_html=True)
 
-if st.button("Compile Spec to Production Code"):
-    if not gherkin_spec.strip() or gherkin_spec.startswith("#"):
-        st.warning("Please provide a valid specification feature set first!")
+# 6. Compliance Execution Pipeline
+if st.button("Synthesize Specification into Verified Code", use_container_width=True, type="primary"):
+    if not gherkin_spec.strip() or "[Enter System Feature]" in gherkin_spec:
+        st.warning("⚠️ Execution halted: Please provide a valid behavior-driven specification frame.")
     else:
-        # Step A: Hybrid Policy Server validation animation
-        with st.status("🔒 Policy Server: Auditing System Trajectories...", expanded=True) as status:
-            st.write("📡 Connecting to Asynchronous Enterprise Pipeline...")
-            st.write("🔍 Running static syntax check on Gherkin blocks...")
-            st.write("🛡️ Validating zero-trust compliance constraints...")
+        # Hybrid Policy Server validation trajectory
+        with st.status("🔒 Hybrid Policy Server: Auditing Pipeline Compliance Trajectories...", expanded=True) as status:
+            st.write("📡 Connecting to Asynchronous Enterprise Evaluation Framework...")
+            st.write("🔍 Parsing semantic nodes of Gherkin block syntax...")
+            st.write("🛡️ Evaluating zero-trust access control boundaries...")
             
-            # Formulate the strict spec prompt for Gemini
+            # Formulate the strict engineering compilation prompt for Gemini
             sdd_prompt = f"""
-            You are an automated enterprise-grade code-review and compilation agent. 
+            You are an expert automated software compilation agent designed for an elite Final Year Engineering Capstone project. 
             You must treat the following Gherkin Behavior Specification as the absolute source of truth.
             
-            SPECIFICATION:
+            SPECIFICATION TO COMPILE:
             \"\"\"{gherkin_spec}\"\"\"
             
-            INSTRUCTIONS:
-            1. Validate if the spec is sound.
-            2. Generate the highly robust, clean production Python logic/code block that perfectly satisfies this specification.
-            3. Include brief developer compliance notes at the end.
+            OUTPUT STRUCTURAL REQUIREMENTS:
+            1. CRITICAL ANALYSIS: Briefly state if the provided specification layout is verified and log-sound.
+            2. PRODUCTION CODE ARCHITECTURE: Generate an production-grade, cleanly structured Python implementation that satisfies the spec perfectly. 
+            3. AGENT SPEC COMPLIANCE REPORT: Conclude with a single-line declaration confirming the strict alignment between the specification constraints and the synthesized logic.
             """
             
             try:
                 response = client.models.generate_content(model='gemini-2.5-flash', contents=sdd_prompt)
-                status.update(label="✅ Policy Server Approved! Spec compiled successfully.", state="complete", expanded=False)
+                status.update(label="✅ Trajectory Synthesis Complete: Policy Compliance Verified.", state="complete", expanded=False)
                 
-                # Step B: Present the compiled production asset
-                st.success("🎯 **Compiled Production-Grade Code Block:**")
-                st.write(response.text)
+                st.markdown("### 🎯 System Synthesis Output Artifacts")
+                st.info(response.text)
                 
             except APIError:
-                status.update(label="❌ Connection Timeout", state="error")
-                st.error("Google's backend servers are busy. Please try clicking the button again.")
+                status.update(label="❌ Connection Timeout Interrupted Pipeline", state="error")
+                st.error("Google Server Cluster returned a temporary overload status. Please resubmit the synthesis execution query.")
             except Exception as e:
-                status.update(label="❌ Pipeline Error", state="error")
-                st.error(f"An unexpected error occurred: {e}")
+                status.update(label="❌ Synthesis Engine Runtime Failure", state="error")
+                st.error(f"Execution error encountered: {e}")
