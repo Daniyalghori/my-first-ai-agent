@@ -20,6 +20,7 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 
 # Custom CSS injection for premium typography and container styling
+# FIX: Removed the non-existent parameter 'unsafe_index=False'
 st.markdown("""
     <style>
     .main-title {
@@ -43,7 +44,7 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     </style>
-""", unsafe_index=False, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # 2. Main Title & Academic Capstone Sub-header
 st.markdown('<div class="main-title">🚀 Spec-Driven Agentic Synthesis Engine</div>', unsafe_allow_html=True)
