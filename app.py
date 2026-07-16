@@ -2,107 +2,139 @@ import os
 import streamlit as st
 from google import genai
 
-# Set up page configuration with an ultra-modern layout
+# Set up page configuration for an ultra-modern, high-tech engine portal
 st.set_page_config(
     page_title="IntelliAgent",
     page_icon="🧠",
     layout="centered"
 )
 
-# Advanced CSS Architecture: Custom Injectable UI Framework with Animations
+# Advanced CSS Architecture: Blueprint Aesthetics, AI Schematics & Micro-Animations
 st.markdown("""
     <style>
+    /* Absolute AI Circuit Board Blueprint Background Layer */
+    .stApp {
+        background-color: #0b0f19 !important;
+        background-image: 
+            /* Subtle grid lines */
+            linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+            /* Abstract Neural Node Vector Doodles */
+            radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 2px, transparent 3px),
+            radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.06) 4px, transparent 6px),
+            /* Circuit traces and nodes */
+            radial-gradient(circle at 30% 80%, rgba(37, 99, 235, 0.07) 3px, transparent 5px),
+            radial-gradient(circle at 75% 70%, rgba(59, 130, 246, 0.05) 2px, transparent 4px);
+        background-size: 40px 40px, 40px 40px, 200px 200px, 350px 350px, 300px 300px, 250px 250px;
+        color: #f8fafc !important;
+    }
+
     /* Keyframes for Engineering Micro-Animations */
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(12px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes pulseGlow {
-        0% { box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
-        50% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.5); }
-        100% { box-shadow: 0 0 5px rgba(37, 99, 235, 0.2); }
+    @keyframes corePulse {
+        0% { border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 0 8px rgba(37, 99, 235, 0.1); }
+        50% { border-color: rgba(59, 130, 246, 0.7); box-shadow: 0 0 18px rgba(59, 130, 246, 0.4); }
+        100% { border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 0 8px rgba(37, 99, 235, 0.1); }
     }
     
     /* Animation Wrapper classes */
     .animated-container {
-        animation: fadeIn 0.8s ease-out forwards;
+        animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     
     /* Premium Title Header Typography */
     .main-title {
-        font-size: 2.6rem !important;
+        font-size: 2.8rem !important;
         font-weight: 800 !important;
-        background: linear-gradient(135deg, #1E293B, #2563EB, #3B82F6);
+        background: linear-gradient(135deg, #ffffff, #60a5fa, #3b82f6);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.1rem !important;
-        animation: fadeIn 0.6s ease-out;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
     .subtitle {
-        font-size: 1.05rem !important;
-        color: #64748B;
+        font-size: 0.95rem !important;
+        color: #94a3b8;
         margin-bottom: 2rem !important;
         font-family: 'Courier New', Courier, monospace;
+        letter-spacing: 1px;
+    }
+
+    /* Target input label color explicitly for dark mode visibility */
+    label[data-testid="stWidgetLabel"] p {
+        color: #cbd5e1 !important;
+        font-weight: 600;
         letter-spacing: 0.5px;
-        animation: fadeIn 0.8s ease-out;
     }
     
-    /* Glassmorphic Engineering Workspace Panels */
+    /* Cybernetic Workspace Input Terminal Panels */
+    div[data-testid="stTextArea"] textarea {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+        border-radius: 10px !important;
+    }
     div[data-testid="stTextArea"] {
-        border: 2px solid #E2E8F0 !important;
+        border: 2px solid rgba(51, 65, 85, 0.7) !important;
         border-radius: 12px !important;
         transition: all 0.3s ease-in-out !important;
-        background: #F8FAFC !important;
+        background: #0f172a !important;
     }
     div[data-testid="stTextArea"]:focus-within {
-        border-color: #2563EB !important;
-        animation: pulseGlow 2s infinite !important;
+        animation: corePulse 2s infinite !important;
     }
     
-    /* Telemetry Info & Status Card Styling */
+    /* Telemetry Output Box Glassmorphism Styling */
     .telemetry-card {
-        background: linear-gradient(145deg, #ffffff, #f1f5f9);
-        border: 1px solid #cbd5e1;
-        border-left: 6px solid #2563EB;
-        border-radius: 10px;
-        padding: 1.25rem;
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-left: 6px solid #3b82f6;
+        border-radius: 12px;
+        padding: 1.5rem;
         margin-top: 1.5rem;
-        animation: fadeIn 0.5s ease-out forwards;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
     }
     .telemetry-title {
         font-weight: 700;
-        color: #0F172A;
+        color: #60a5fa;
         font-size: 1.1rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        font-family: 'Courier New', Courier, monospace;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .telemetry-content {
+        color: #e2e8f0;
+        line-height: 1.6;
     }
     
-    /* Custom Override for the Action Execution Button */
+    /* Custom Engineering Trigger Button Override */
     div.stButton > button:first-child {
-        background: linear-gradient(90deg, #1E293B, #2563EB) !important;
-        color: white !important;
-        border: none !important;
+        background: linear-gradient(90deg, #1e3a8a, #2563eb) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(96, 165, 250, 0.4) !important;
         border-radius: 8px !important;
-        padding: 0.6rem 2rem !important;
+        padding: 0.65rem 2rem !important;
         font-weight: 600 !important;
-        letter-spacing: 0.5px !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2) !important;
+        letter-spacing: 0.75px !important;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2) !important;
     }
     div.stButton > button:first-child:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4) !important;
-        background: linear-gradient(90deg, #0F172A, #1D4ED8) !important;
-    }
-    div.stButton > button:first-child:active {
-        transform: translateY(0px) !important;
+        box-shadow: 0 12px 20px rgba(37, 99, 235, 0.4) !important;
+        background: linear-gradient(90deg, #2563eb, #3b82f6) !important;
+        border-color: #60a5fa !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Layout Container with dynamic entry animations
+# Main Dashboard Frame Wrapping
 st.markdown('<div class="animated-container"><div class="main-title">🤖 IntelliAgent Engine</div></div>', unsafe_allow_html=True)
-st.markdown('<div class="animated-container"><div class="subtitle">SYSTEM CORE: REAL-TIME INFERENCE GATEWAY // RUNTIME MODULE v1.0.4</div></div>', unsafe_allow_html=True)
+st.markdown('<div class="animated-container"><div class="subtitle">CORE BASELINE // NEURAL NETWORK INTELLIGENCE GATEWAY v1.0.5</div></div>', unsafe_allow_html=True)
 
 # 1. Initialize the Gemini GenAI Client
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -110,13 +142,12 @@ if not api_key:
     st.error("🚨 CRITICAL REGISTRY FAILURE: GEMINI_API_KEY environment variable is missing.")
     st.stop()
 
-# Initialize using the Google GenAI SDK standards
 client = genai.Client(api_key=api_key)
 
 # 2. Workspace Input Area (Monitored via Custom CSS States)
 user_query = st.text_area(
     "Execution Input Workspace:",
-    placeholder="Enter systemic instructions, engineering constraints, or raw prompts here...",
+    placeholder="Enter structural text prompts, algorithms, or engineering instructions here...",
     height=150
 )
 
@@ -133,11 +164,11 @@ if st.button("Execute Baseline Inference", type="primary", use_container_width=T
                     contents=user_query
                 )
                 
-                # Render results within a custom styled telemetry block
+                # Render results within a custom styled blueprint card block
                 st.markdown(f"""
                 <div class="telemetry-card">
                     <div class="telemetry-title">🎯 IntelliAgent Telemetry Output</div>
-                    <div>{response.text}</div>
+                    <div class="telemetry-content">{response.text}</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
