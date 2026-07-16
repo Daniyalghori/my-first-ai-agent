@@ -4,7 +4,7 @@ from google import genai
 
 # Set up page configuration for an ultra-modern, high-tech engine portal
 st.set_page_config(
-    page_title="IntelliAgent Engine",
+    page_title="IntelliAgent",
     page_icon="🧠",
     layout="centered"
 )
