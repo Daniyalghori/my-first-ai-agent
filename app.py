@@ -2,47 +2,66 @@ import os
 import streamlit as st
 from google import genai
 
-# Set up page configuration for Day 1
+# Set up page configuration for a clean, academic look
 st.set_page_config(
-    page_title="Day 1: Baseline AI Agent",
+    page_title="IntelliAgent Engine",
     page_icon="🤖",
     layout="centered"
 )
 
-# Application Header
-st.title("🤖 Day 1: Foundational AI Agent")
-st.write("This represents the simple, single-turn LLM agent setup used to start the Generative AI Intensive.")
+# Application Header Styling
+st.markdown("""
+    <style>
+    .main-title {
+        font-size: 2.3rem !important;
+        font-weight: 800 !important;
+        background: linear-gradient(90deg, #1E293B, #2563EB);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.1rem !important;
+    }
+    .subtitle {
+        font-size: 1.0rem !important;
+        color: #475569;
+        margin-bottom: 1.5rem !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="main-title">🤖 IntelliAgent Engine</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Foundational Real-Time Inference Gateway & Model Baseline Pipeline</div>', unsafe_allow_html=True)
 
 # 1. Initialize the Gemini GenAI Client
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    st.error("🚨 CRITICAL ERROR: GEMINI_API_KEY environment variable is not set.")
+    st.error("🚨 CRITICAL REGISTRY FAILURE: GEMINI_API_KEY environment variable is missing.")
     st.stop()
 
-# Initialize using the new Google GenAI SDK standards
+# Initialize using the Google GenAI SDK standards
 client = genai.Client(api_key=api_key)
 
-# 2. Basic Interactive UI
+# 2. Modern Interactive Input Area
 user_query = st.text_area(
-    "Submit a query to the model:",
-    placeholder="Type something here (e.g., 'Explain neural networks in one sentence')..."
+    "Execution Input Workspace:",
+    placeholder="Enter your instruction or query here...",
+    height=150
 )
 
-# 3. Simple Single-Turn Generation Execution Path
-if st.button("Query Agent", type="primary"):
+# 3. Execution Pipeline
+if st.button("Execute Baseline Inference", type="primary", use_container_width=True):
     if not user_query.strip():
-        st.warning("⚠️ Please provide a query before executing.")
+        st.warning("⚠️ Execution halted: Workspace input is empty.")
     else:
-        with st.spinner("Agent is generating response..."):
+        with st.spinner("Processing inference pipeline on Gemini 2.5 Flash..."):
             try:
-                # Classic direct single model generation call
+                # Direct single-turn inference call to Gemini 2.5 Flash
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
                     contents=user_query
                 )
                 
-                st.success("🎯 Response Received:")
+                st.success("🎯 IntelliAgent Telemetry Output:")
                 st.write(response.text)
                 
             except Exception as e:
-                st.error(f"❌ Execution failed: {e}")
+                st.error(f"❌ Core processing error: {e}")
