@@ -4,28 +4,24 @@ from google import genai
 
 # Set up page configuration for an ultra-modern, high-tech engine portal
 st.set_page_config(
-    page_title="IntelliAgent",
+    page_title="IntelliAgent Engine",
     page_icon="🧠",
     layout="centered"
 )
 
-# Advanced CSS Architecture: Blueprint Aesthetics, AI Schematics & Micro-Animations
+# Advanced CSS Architecture: Responsive AI Blueprint Doodle Grid & Micro-Animations
 st.markdown("""
     <style>
-    /* Absolute AI Circuit Board Blueprint Background Layer */
+    /* Absolute AI Circuit Board Blueprint Background Layer with Vector Doodles */
     .stApp {
         background-color: #0b0f19 !important;
         background-image: 
-            /* Subtle grid lines */
-            linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-            /* Abstract Neural Node Vector Doodles */
-            radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 2px, transparent 3px),
-            radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.06) 4px, transparent 6px),
-            /* Circuit traces and nodes */
-            radial-gradient(circle at 30% 80%, rgba(37, 99, 235, 0.07) 3px, transparent 5px),
-            radial-gradient(circle at 75% 70%, rgba(59, 130, 246, 0.05) 2px, transparent 4px);
-        background-size: 40px 40px, 40px 40px, 200px 200px, 350px 350px, 300px 300px, 250px 250px;
+            /* Subtle layout grid overlay */
+            linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+            /* Custom Hand-Drawn AI Icon Vector Pattern (Base64 SVG Pattern) */
+            url("data:image/svg+xml;utf8,<svg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='%233b82f6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.12'><rect x='20' y='20' width='30' height='30' rx='4'/><path d='M30 20v-6M40 20v-6M20 30h-6M20 40h-6M30 50v6M40 50v6M50 30h6M50 40h6'/><circle cx='35' cy='35' r='4'/><circle cx='195' cy='35' r='5'/><circle cx='170' cy='20' r='3'/><circle cx='170' cy='50' r='3'/><circle cx='215' cy='15' r='3'/><circle cx='215' cy='50' r='3'/><path d='M173 22l18 10M173 48l18-10M199 33l13-14M199 37l13 11'/><path d='M120 100a18 18 0 0 0-14 29c2 4 4 8 4 12v5h20v-5c0-4 2-8 4-12a18 18 0 0 0-14-29z'/><path d='M112 153h16M115 158h10'/><rect x='15' y='170' width='40' height='30' rx='8'/><circle cx='28' cy='182' r='2.5'/><circle cx='42' cy='182' r='2.5'/><path d='M30 192h10M35 170v-8M32 162h6'/><path d='M180 185c-3-3-8-3-11 0-3 3-3 8 0 11l11 11M205 185c3-3 8-3 11 0 3 3 3 8 0 11l-11 11M192.5 170v15M192.5 200v15'/><circle cx='192.5' cy='170' r='3'/><circle cx='192.5' cy='215' r='3'/></g></svg>");
+        background-size: 40px 40px, 40px 40px, 240px 240px;
         color: #f8fafc !important;
     }
 
@@ -53,7 +49,7 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.1rem !important;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
     .subtitle {
         font-size: 0.95rem !important;
@@ -88,13 +84,13 @@ st.markdown("""
     
     /* Telemetry Output Box Glassmorphism Styling */
     .telemetry-card {
-        background: rgba(15, 23, 42, 0.75);
+        background: rgba(15, 23, 42, 0.8);
         border: 1px solid rgba(59, 130, 246, 0.3);
         border-left: 6px solid #3b82f6;
         border-radius: 12px;
         padding: 1.5rem;
         margin-top: 1.5rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(4px);
     }
     .telemetry-title {
